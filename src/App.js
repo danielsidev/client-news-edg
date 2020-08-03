@@ -1,26 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
-  return (
+import React, { Component } from 'react';
+import NewsForm from './components/NewsForm';
+import AllNews from './components/AllNews';
+import { Redirect } from 'react-router'
+
+
+class App extends Component {
+  constructor(args){
+    super(args)
+    this.state = {redirect: false,   mmessage:'' }
+  }
+
+  componentDidMount() {
+    const token = localStorage.getItem('token_ed_globo');
+    console.log(`toke: ${token}`)
+    if(!token || token=='null'){
+      this.setState({message:'Logout!',redirect: true});
+    }
+  }
+  logout = () =>{
+    localStorage.removeItem('token_ed_globo');    
+    this.setState({message:'Logout!',redirect: true});
+  
+  };
+  render() {
+    if(this.state.redirect) {
+      return <Redirect to="/" />
+    }
+    return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+        <div className="navbar">
+          <h2 className="center ">Editora Globo</h2>
+          <button className="sair"
+        onClick={()=>this.logout()}>
+        Sair</button>
+        </div>
+        <NewsForm />
+        <AllNews />
 
+    </div>
+    );
+    }
+  }
 export default App;
